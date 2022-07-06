@@ -9,6 +9,7 @@ import androidx.startup.Initializer;
 import com.user.libbase.utils.LogUtil;
 import com.user.libbase.utils.PropertiesUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LabBaseInitializer implements Initializer<Object> {
@@ -18,13 +19,15 @@ public class LabBaseInitializer implements Initializer<Object> {
         PropertiesUtil.init(context);
         String tag = PropertiesUtil.getProperties("tag");
         String isShowLog = PropertiesUtil.getProperties("isShowLog");
-        LogUtil.init(TextUtils.isEmpty(tag)?"TAG":tag,TextUtils.equals(isShowLog,"false"));
+        LogUtil.init(TextUtils.isEmpty(tag) ? "TAG" : tag, TextUtils.equals(isShowLog, "false"));
         return null;
     }
 
     @NonNull
     @Override
     public List<Class<? extends Initializer<?>>> dependencies() {
-        return null;
+        List<Class<? extends Initializer<?>>> list = new ArrayList<>();
+        list.add(OtherInitializer.class);
+        return list;
     }
 }

@@ -5,14 +5,13 @@ if (cfg.isDebug) {
 } else {
     apply plugin: 'com.android.library'
 }
-
 apply plugin: 'dagger.hilt.android.plugin'
 
 android {
-    compileSdk 33
+    compileSdk cfg.android.compileSdkVersion
 
     defaultConfig {
-        if (cfg.isDebug){
+        if (cfg.isDebug) {
             applicationId cfg.applicationid.main
         }
         minSdk cfg.android.minSdkVersion
@@ -25,7 +24,7 @@ android {
         //必须添加的
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = [AROUTER_MODULE_NAME: project.getName()]
+                arguments += [AROUTER_MODULE_NAME: project.getName()]
             }
         }
     }
@@ -40,16 +39,27 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    sourceSets {
+        main {
+            if (cfg.isDebug) {
+                manifest.srcFile 'src/main/debug/AndroidManifest.xml'
+            } else {
+                manifest.srcFile 'src/main/AndroidManifest.xml'
+            }
+        }
+    }
+
+    //支持viewBinding
+    android.buildFeatures.viewBinding = true
 }
 
 dependencies {
 
-    api cfg.library.appcompat
-    api cfg.library.meatrial
-    api cfg.library.constraintlayout
+    implementation project(path: ':modulesBase:libBase')
+    implementation project(path: ':modulesPublic:common')
 
     //ARouter
-    api cfg.libARouter
     annotationProcessor cfg.libARouterCompiler
 
     //使用hilt
