@@ -1,0 +1,52 @@
+plugins {
+    id 'com.android.application'
+    id 'dagger.hilt.android.plugin'
+}
+
+def cfg = rootProject.ext
+
+android {
+    compileSdk cfg.android.compileSdkVersion
+
+    defaultConfig {
+        applicationId cfg.applicationId.app
+        minSdk cfg.android.minSdkVersion
+        targetSdk cfg.android.targetSdkVersion
+        versionCode cfg.android.versionCode
+        versionName cfg.android.versionName
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    api cfg.library.appcompat
+    api cfg.library.meatrial
+    api cfg.library.constraintlayout
+    implementation cfg.library.startup
+    implementation project(path: ':modulesBase:libBase')
+    implementation project(path: ':modulesPublic:common')
+
+    if (!cfg.isDebug) {
+        implementation project(path: ':modulesCore:main')
+    }
+
+    //使用hilt
+    implementation cfg.libHilt
+    annotationProcessor cfg.libHiltCompiler
+
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+}

@@ -1,0 +1,62 @@
+def cfg = rootProject.ext
+
+if (cfg.isDebug) {
+    apply plugin: 'com.android.application'
+} else {
+    apply plugin: 'com.android.library'
+}
+
+apply plugin: 'dagger.hilt.android.plugin'
+
+android {
+    compileSdk 33
+
+    defaultConfig {
+        if (cfg.isDebug){
+            applicationId cfg.applicationid.main
+        }
+        minSdk cfg.android.minSdkVersion
+        targetSdk cfg.android.targetSdkVersion
+        versionCode cfg.android.versionCode
+        versionName cfg.android.versionName
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        //必须添加的
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [AROUTER_MODULE_NAME: project.getName()]
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+
+    api cfg.library.appcompat
+    api cfg.library.meatrial
+    api cfg.library.constraintlayout
+
+    //ARouter
+    api cfg.libARouter
+    annotationProcessor cfg.libARouterCompiler
+
+    //使用hilt
+    implementation cfg.libHilt
+    annotationProcessor cfg.libHiltCompiler
+
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+}

@@ -1,0 +1,70 @@
+plugins {
+    id 'com.android.library'
+    id 'dagger.hilt.android.plugin'
+}
+
+def cfg = rootProject.ext
+
+android {
+    compileSdk cfg.android.compileSdkVersion
+
+    defaultConfig {
+        minSdk cfg.android.minSdkVersion
+        targetSdk cfg.android.targetSdkVersion
+        versionCode cfg.android.versionCode
+        versionName cfg.android.versionName
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [AROUTER_MODULE_NAME: project.getName()]
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    api cfg.library.appcompat
+    api cfg.library.meatrial
+    api cfg.library.constraintlayout
+
+    //ARouter
+    api cfg.libARouter
+    annotationProcessor cfg.libARouterCompiler
+
+    //net
+    api cfg.libOkHttp
+    api cfg.libHttpLogger
+    api cfg.libRetrofit
+    api cfg.libRetrofit2Gson
+    api cfg.libRetrofit2RxJava
+    api cfg.libRxJavaAndroid
+
+    //glide
+    api cfg.libGlide
+    annotationProcessor cfg.libGlideCompiler
+
+    //使用hilt
+    implementation cfg.libHilt
+    annotationProcessor cfg.libHiltCompiler
+
+    //startup
+    implementation cfg.library.startup
+
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+}
